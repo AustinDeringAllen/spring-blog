@@ -10,9 +10,11 @@ import java.util.List;
 @Controller
 public class PostController {
     private final PostRepository postRepo;
+    private final UserRepository userRepo;
 
-    public PostController(PostRepository postRepo) {
+    public PostController(PostRepository postRepo, UserRepository userRepo) {
         this.postRepo = postRepo;
+        this.userRepo = userRepo;
     }
 
     @RequestMapping(path = "/posts", method = RequestMethod.GET)
@@ -40,6 +42,7 @@ public class PostController {
         Post post = new Post();
         post.setTitle(title);
         post.setBody(body);
+        post.setOwner(userRepo.getOne(1L));
         postRepo.save(post);
         return "redirect:/posts/" + post.getId();
     }
