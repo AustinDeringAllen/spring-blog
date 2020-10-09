@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <div th:replace="partials :: navbar"></div>
+    <div th:replace="partials :: header"></div>
+
+    <h1>Dice Guess</h1>
+    <h2 th:each="item : ${rolls}">
+        <span th:text="${item}"></span>
+        <span th:if="${item == numberToGuess}">- Correct</span>
+    </h2>
+
+    <div th:replace="partials :: footer"></div>
+</body>
+</html>
