@@ -1,11 +1,11 @@
 package com.codeup.blog;
 
+import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Objects;
 
 @Controller
 public class PostController {
@@ -31,21 +31,29 @@ public class PostController {
     }
 
     @RequestMapping(path = "/posts/create", method = RequestMethod.GET)
-    public String createPostForm() {
+    public String createPostForm(Model model) {
+        model.addAttribute("post", new Post());
         return "posts/create";
     }
 
     @RequestMapping(path = "/posts/create", method = RequestMethod.POST)
-    public String createPost(@RequestParam(name = "title") String title,
-                             @RequestParam(name = "body") String body,
-                             Model model) {
-        Post post = new Post();
-        post.setTitle(title);
-        post.setBody(body);
-        post.setOwner(userRepo.getOne(1L));
+    public String createPost(@ModelAttribute Post post) {
+        post.setUser(userRepo.getOne(2L));
         postRepo.save(post);
-        return "redirect:/posts/" + post.getId();
+        return "redirect:/posts/";
     }
+
+//    @RequestMapping(path = "/posts/create", method = RequestMethod.POST)
+//    public String createPost(@RequestParam(name = "title") String title,
+//                             @RequestParam(name = "body") String body,
+//                             Model model) {
+//        Post post = new Post();
+//        post.setTitle(title);
+//        post.setBody(body);
+//        post.setUser(userRepo.getOne(2L));
+//        postRepo.save(post);
+//        return "redirect:/posts/" + post.getId();
+//    }
 
 
     @GetMapping("/posts/delete/{id}")
@@ -57,9 +65,8 @@ public class PostController {
         return "redirect:/posts";
     }
 
-
-    @GetMapping("/posts/edit/{id}")
-    public String showEditPost(@PathVariable long id, Model model) {
+    @GetMapping("/posts/{id}/edit")
+    public String showEdit(@PathVariable long id, Model model) {
         Post post = postRepo.getAdById(id);
         if (post == null) {
             return "redirect:/posts/index";
@@ -67,7 +74,6 @@ public class PostController {
         model.addAttribute("post", post);
         return "posts/edit";
     }
-
 
     @PostMapping("/posts/edit")
     public String updatePost(@RequestParam(name = "id") long id,

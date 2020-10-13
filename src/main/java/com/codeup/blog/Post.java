@@ -15,8 +15,9 @@ public class Post {
     @Column(nullable = false, columnDefinition = "TEXT")
     private String body;
 
-    @OneToOne
-    private User owner;
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
 
     public Post(String title, String body) {
         this.title = title;
@@ -51,11 +52,11 @@ public class Post {
         this.body = body;
     }
 
-    public User getOwner() {
-        return owner;
+    public User getUser() {
+        return user;
     }
 
-    public void setOwner(User owner) {
-        this.owner = owner;
+    public void setUser(User user) {
+        this.user = user;
     }
 }
